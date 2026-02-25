@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
@@ -8,7 +15,10 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+# ZSH_THEME="powerlevel10k/powerlevel10k"
 ZSH_THEME="robbyrussell"
+
+
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -90,7 +100,8 @@ source $ZSH/oh-my-zsh.sh
 
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
-export dev='/Users/elsablot/code/elabdev'
+export dev='/home/touma/code/elabdev'
+export EDITOR='vim'
 
 # Set personal aliases, overriding those provided by Oh My Zsh libs,
 # plugins, and themes. Aliases can be placed here, though Oh My Zsh
@@ -131,6 +142,11 @@ alias gmh='git merge hypernext'
 alias nrb='npm run build && npm run build:js'
 alias nr='npm run start'
 alias mysql8='cd $dev && ./elabctl mysql'
+alias sing='rm -rf ~/.config/google-chrome/Singleton*'
+alias wire='sudo wg-quick up /etc/wireguard/wg0.conf'
+alias cov='firefox ~/code/elabdev/elabftw/tests/_output/coverage/index.html'
+alias yt='SKIP_TWIGCS=1 yarn test --unit'
+alias dbup='docker exec -it elabftw bin/console db:update'
 
 if [ "$TERM" != "linux" ] ; then
     if [ -r ~/.ssh/id_ed25519 ]; then
@@ -141,4 +157,13 @@ if [ "$TERM" != "linux" ] ; then
     fi
 fi
 
-. "$HOME/.local/bin/env"
+# . "$HOME/.local/bin/env"
+
+#source ~/powerlevel10k/powerlevel10k.zsh-theme
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+#[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
