@@ -6,7 +6,7 @@
 # fi
 
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -102,6 +102,11 @@ source $ZSH/oh-my-zsh.sh
 # export ARCHFLAGS="-arch $(uname -m)"
 export dev='/home/touma/code/elabdev'
 export EDITOR='vim'
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:$(go env GOPATH)/bin
 
 # Set personal aliases, overriding those provided by Oh My Zsh libs,
 # plugins, and themes. Aliases can be placed here, though Oh My Zsh
@@ -114,19 +119,47 @@ export EDITOR='vim'
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias elab="cd ~/code/elabdev/elabftw"
-alias tom="cd ~/code/elabdev/tom-select"
+
+# REPOSITORIES
+alias elab='cd ~/code/elabdev/elabftw'
+alias tom='cd ~/code/elabdev/tom-select'
+alias .vi='vim ~/.vim/vimrc'
+alias z='vim ~/.zshrc'
+alias t='vim ~/.tmux.conf'
+alias vimrc='vim ~/.vim/vimrc'
+alias eln='cd ~/code/elabdev/eln.community'
+alias ptg='cd ~/code/elabdev/partage'
+alias url='cd ~/code/elabdev/url-shortener'
+
+# CLI COMMANDS
 alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i'
 alias h='history'
 alias hg='history | grep'
 alias vi='vim'
-alias .vi='vim ~/.vim/vimrc'
 alias sz='source ~/.zshrc'
-alias z='vim ~/.zshrc'
-alias vimrc='vim ~/.vim/vimrc'
-alias lock='pmset displaysleepnow'
+alias se='source .env'
+alias lockmac='pmset displaysleepnow'
+alias lock='dm-tool lock'
+alias sing='rm -rf ~/.config/google-chrome/Singleton*'
+alias wire='sudo wg-quick up /etc/wireguard/wg0.conf'
+
+# GIT COMMANDS
+alias mas='git checkout master'
+alias gph='git pull'
+alias gmm='git merge master'
+
+# DOCKERS
+alias docstop='docker stop $(docker ps -qa)'
+alias docrm='docker rm $(docker ps -qa)'
+alias docrmi='docker rm $(docker images -qa)'
+alias prune='docker system prune -a'
+alias dc='docker compose'
+alias logs='docker logs -f --tail=100 '
+
+# ELAB
+alias elabc='docker exec -it elabftw'
 alias wjs='docker exec -it elabftw yarn watchjs'
 alias dwjs='docker exec -it elabftw yarn install && docker exec -it elabftw yarn watchjs'
 alias dy='docker exec -it elabftw yarn install'
@@ -136,17 +169,28 @@ alias restart='cd ~/code/elabdev && ./elabctl restart && cd -'
 alias y='docker exec -it elabftw yarn'
 alias cy='npm i --no-save --no-lockfile cypress cypress-terminal-report && ./node_modules/.bin/cypress open'
 alias cystop='git checkout -- yarn.lock && rm -rf node_modules && yarn install'
-alias hyp='git checkout hypernext'
-alias gph='git pull'
-alias gmh='git merge hypernext'
 alias nrb='npm run build && npm run build:js'
 alias nr='npm run start'
 alias mysql8='cd $dev && ./elabctl mysql'
-alias sing='rm -rf ~/.config/google-chrome/Singleton*'
-alias wire='sudo wg-quick up /etc/wireguard/wg0.conf'
 alias cov='firefox ~/code/elabdev/elabftw/tests/_output/coverage/index.html'
 alias yt='SKIP_TWIGCS=1 yarn test --unit'
 alias dbup='docker exec -it elabftw bin/console db:update'
+
+# PARTAGE
+alias dbptg='docker build -t ghcr.io/deltablot/partage .'
+alias drptg='docker run -p 8080:8080 -e SITE_URL=http://localhost:8080 --rm --name partage ghcr.io/deltablot/partage'
+
+# ELN
+alias cli='go build -o cli ./src/cmd && cd src && bash build.sh && cd .. && go run ./src'
+alias pg='dc exec -it postgres psql -U eln -d eln'
+alias gof='gofmt src/*.go'
+
+# TMUX
+alias tn='tmux new -s'
+alias tl='tmux ls'
+alias ta='tmux attach -t'
+alias tk='tmux kill-session -t'
+
 
 if [ "$TERM" != "linux" ] ; then
     if [ -r ~/.ssh/id_ed25519 ]; then
@@ -164,6 +208,4 @@ fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 #[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+

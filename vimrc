@@ -3,7 +3,6 @@ set nocompatible
 
 
 
-
 " PLUG PLUGIN MANAGER
 
 " https://github.com/junegunn/vim-plug
@@ -32,6 +31,9 @@ Plug 'pangloss/vim-javascript'
 
 " HerringtonDarkholme/yats.vim
 Plug 'HerringtonDarkholme/yats.vim'
+
+" https://github.com/fatih/vim-go
+Plug 'fatih/vim-go'
 call plug#end()
 
 
@@ -137,6 +139,9 @@ set ignorecase
 " search is case sensitive only if you put a CAPITAL
 set smartcase
 
+" enable mouse
+set mouse=a
+set ttymouse=sgr
 
 
 
