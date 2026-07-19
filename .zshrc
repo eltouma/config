@@ -173,7 +173,8 @@ alias nrb='npm run build && npm run build:js'
 alias nr='npm run start'
 alias mysql8='cd $dev && ./elabctl mysql'
 alias cov='firefox ~/code/elabdev/elabftw/tests/_output/coverage/index.html'
-alias yt='SKIP_TWIGCS=1 yarn test --unit'
+alias skyt='SKIP_TWIGCS=1 SKIP_POPULATE=1 yarn ./tests/run.sh unit'
+alias yt='./tests/run.sh unit'
 alias dbup='docker exec -it elabftw bin/console db:update'
 
 # PARTAGE
