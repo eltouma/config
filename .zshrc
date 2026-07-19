@@ -184,7 +184,7 @@ alias drptg='docker run -p 8080:8080 -e SITE_URL=http://localhost:8080 --rm --na
 # ELN
 alias cli='go build -o cli ./src/cmd && cd src && bash build.sh && cd .. && go run ./src'
 alias pg='dc exec -it postgres psql -U eln -d eln'
-alias gof='gofmt src/*.go'
+alias gof='gofmt -w src/*.go'
 
 # TMUX
 alias tn='tmux new -s'
