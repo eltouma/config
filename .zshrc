@@ -1,4 +1,3 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 # if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -162,11 +161,12 @@ alias logs='docker logs -f --tail=100 '
 alias elabc='docker exec -it elabftw'
 alias wjs='docker exec -it elabftw yarn watchjs'
 alias dwjs='docker exec -it elabftw yarn install && docker exec -it elabftw yarn watchjs'
+alias elabw='cd ~/code/elabdev/elabftw && docker exec -it elabftw yarn install && docker exec -it elabftw yarn watchjs'
 alias dy='docker exec -it elabftw yarn install'
 alias dbpop='docker exec -it elabftw bin/init db:populate src/tools/populate-config.yml.dist'
-alias refresh='cd ~/code/elabdev && ./elabctl refresh && cd -'
-alias restart='cd ~/code/elabdev && ./elabctl restart && cd -'
+alias refresh='cd ~/code/elabdev/elabftw && containers/elabdev/start.sh'
 alias y='docker exec -it elabftw yarn'
+alias yba='yarn buildall'
 alias cy='npm i --no-save --no-lockfile cypress cypress-terminal-report && ./node_modules/.bin/cypress open'
 alias cystop='git checkout -- yarn.lock && rm -rf node_modules && yarn install'
 alias nrb='npm run build && npm run build:js'
@@ -176,6 +176,9 @@ alias cov='firefox ~/code/elabdev/elabftw/tests/_output/coverage/index.html'
 alias skyt='SKIP_TWIGCS=1 SKIP_POPULATE=1 yarn ./tests/run.sh unit'
 alias yt='./tests/run.sh unit'
 alias dbup='docker exec -it elabftw bin/console db:update'
+alias i18='docker exec -it elabftw bin/console dev:i18n4js'
+alias lint='docker exec -it elabftw yarn eslint src/ts --fix'
+alias php='docker exec -it elabftw yarn phpcs'
 
 # PARTAGE
 alias dbptg='docker build -t ghcr.io/deltablot/partage .'
@@ -201,6 +204,59 @@ if [ "$TERM" != "linux" ] ; then
         fi
     fi
 fi
+
+# LAUNCH TMUX
+if [[ -z "$TMUX" && -t 0 ]]; then
+    SESSION="dev"
+
+    if ! tmux has-session -t "$SESSION" 2>/dev/null; then
+        tmux new-session -d -x "$COLUMNS" -y "$LINES" -s "$SESSION" -n zsh
+    fi
+
+    if ! tmux list-windows -t "$SESSION" -F '#W' | grep -qx "zsh"; then
+        tmux new-window -d -t "$SESSION" -n zsh
+    fi
+
+    if ! tmux list-windows -t "$SESSION" -F '#W' | grep -qx "elab"; then
+        tmux new-window -d -t "$SESSION" -n elab -c "$HOME/code/elabdev/elabftw"
+        tmux split-window -v -l 20% -t "${SESSION}:elab" -c "$HOME/code/elabdev/elabftw"
+        tmux select-pane -U -t "${SESSION}:elab"
+    fi
+
+    if ! tmux list-windows -t "$SESSION" -F '#W' | grep -qx "eln"; then
+        tmux new-window -d -t "$SESSION" -n eln -c "$HOME/code/elabdev/eln.community"
+        tmux split-window -v -l 20% -t "${SESSION}:eln" -c "$HOME/code/elabdev/eln.community"
+        tmux select-pane -U -t "${SESSION}:eln"
+    fi
+
+    if ! tmux list-windows -t "$SESSION" -F '#W' | grep -qx "watch"; then
+        tmux new-window -d -t "$SESSION" -n watch
+        tmux send-keys -t "${SESSION}:watch" "elabw" Enter
+    fi
+
+    tmux select-window -t "${SESSION}:elab"
+    tmux attach-session -t "$SESSION"
+fi
+
+
+# SWITCH TMUX WINDOWS
+elab1() {
+    if [[ "$(tmux display-message -p -t dev:1 '#W')" != "elab" ]]; then
+        tmux swap-window -s dev:elab -t dev:1
+        tmux swap-window -s dev:watch -t dev:2
+    fi
+
+    tmux select-window -t dev:elab
+}
+
+eln1() {
+    if [[ "$(tmux display-message -p -t dev:1 '#W')" != "eln" ]]; then
+        tmux swap-window -s dev:eln -t dev:1
+        tmux swap-window -s dev:elab -t dev:2
+    fi
+
+    tmux select-window -t dev:eln
+}
 
 # . "$HOME/.local/bin/env"
 
