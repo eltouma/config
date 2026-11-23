@@ -33,10 +33,18 @@ Plug 'pangloss/vim-javascript'
 Plug 'HerringtonDarkholme/yats.vim'
 
 " https://github.com/fatih/vim-go
-Plug 'fatih/vim-go'
+Plug 'fatih/vim-go', { 'tag': 'v1.29' }
+
+" https://github.com/leafOfTree/vim-svelte-plugin?tab=readme-ov-file
+Plug 'leafOfTree/vim-svelte-plugin'
+
 call plug#end()
 
 
+" SVELTE
+
+let g:vim_svelte_plugin_load_full_syntax = 1
+let g:vim_svelte_plugin_use_typescript = 1
 
 
 " CUSTOM KEY CONFIG
@@ -103,10 +111,15 @@ set signcolumn=yes
 
 " syntax highlighting
 syntax on
+filetype plugin indent on
 
 " dark background
 set background=dark
 
+" Go syntax highlighting
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_function_parameters = 1
 
 " Désactive automatiquement la syntaxe sur les fichiers trop gros (évite les freezes)
 augroup BigFile
@@ -118,6 +131,20 @@ augroup END
 
 
 
+  " STATUS LINE
+ set statusline+=%#warningmsg#
+ set statusline+=%{SyntasticStatuslineFlag()}
+ set statusline+=%*
+
+  set laststatus=2
+  set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%m%r%y%=%c,%l/%L\ %P
+  set statusline=
+  set statusline+=%<\                       " cut at start
+  set statusline+=%2*[%n%H%M%R%W]%*\        " flags and buf no
+  set statusline+=%-40f\                    " path
+  set statusline+=%=%1*%y%*%*\              " file type
+  set statusline+=%10((%l,%c)%)\            " line and column
+  set statusline+=%P                        " percentage of file
 
 " MENU CONFIG
 

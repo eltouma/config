@@ -163,8 +163,9 @@ alias wjs='docker exec -it elabftw yarn watchjs'
 alias dwjs='docker exec -it elabftw yarn install && docker exec -it elabftw yarn watchjs'
 alias elabw='cd ~/code/elabdev/elabftw && docker exec -it elabftw yarn install && docker exec -it elabftw yarn watchjs'
 alias dy='docker exec -it elabftw yarn install'
-alias dbpop='docker exec -it elabftw bin/init db:populate src/tools/populate-config.yml.dist'
+alias dbpop='docker exec -it elabftw bin/init db:populate -y src/tools/populate-config.yml.dist'
 alias refresh='cd ~/code/elabdev/elabftw && containers/elabdev/start.sh'
+alias rebuild='cd ~/code/elabdev/elabftw && containers/elabdev/rebuild-and-watch.sh'
 alias y='docker exec -it elabftw yarn'
 alias yba='yarn buildall'
 alias cy='npm i --no-save --no-lockfile cypress cypress-terminal-report && ./node_modules/.bin/cypress open'
@@ -179,6 +180,8 @@ alias dbup='docker exec -it elabftw bin/console db:update'
 alias i18='docker exec -it elabftw bin/console dev:i18n4js'
 alias lint='docker exec -it elabftw yarn eslint src/ts --fix'
 alias php='docker exec -it elabftw yarn phpcs'
+alias composer='docker exec -it elabftw composer'
+alias rmvendor='docker exec -it elabftw rm -rf vendor'
 
 # PARTAGE
 alias dbptg='docker build -t ghcr.io/deltablot/partage .'
@@ -223,15 +226,15 @@ if [[ -z "$TMUX" && -t 0 ]]; then
         tmux select-pane -U -t "${SESSION}:elab"
     fi
 
+    if ! tmux list-windows -t "$SESSION" -F '#W' | grep -qx "watch"; then
+        tmux new-window -d -t "$SESSION" -n watch
+        tmux send-keys -t "${SESSION}:watch" "elabw" Enter
+    fi
+
     if ! tmux list-windows -t "$SESSION" -F '#W' | grep -qx "eln"; then
         tmux new-window -d -t "$SESSION" -n eln -c "$HOME/code/elabdev/eln.community"
         tmux split-window -v -l 20% -t "${SESSION}:eln" -c "$HOME/code/elabdev/eln.community"
         tmux select-pane -U -t "${SESSION}:eln"
-    fi
-
-    if ! tmux list-windows -t "$SESSION" -F '#W' | grep -qx "watch"; then
-        tmux new-window -d -t "$SESSION" -n watch
-        tmux send-keys -t "${SESSION}:watch" "elabw" Enter
     fi
 
     tmux select-window -t "${SESSION}:elab"
